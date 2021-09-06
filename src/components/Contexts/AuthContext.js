@@ -10,7 +10,7 @@ export function useAuth(){
 export function AuthProvider({children}) {
     const [currentUser, setCurrentUser] = useState();
     const [loading, setLoading] = useState(false);
-    console.log(currentUser)
+    // console.log(currentUser)
 
     function signup(email, password) {
         return auth.createUserWithEmailAndPassword(email, password);
@@ -24,6 +24,7 @@ export function AuthProvider({children}) {
     function logout() {
         return auth.signOut()
     }
+
 
     useEffect(() => {
         //this will run only when we want to mount our component. and will unsubscribe(unmount) when work is done

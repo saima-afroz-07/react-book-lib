@@ -1,0 +1,49 @@
+.form {
+    padding: 30px;
+    background-color: blanchedalmond;
+    border-radius: 10px;
+    max-width: 250px;
+}
+
+input {
+    margin: 10px 0px;
+    height: 25px;
+    border-radius: 5px;
+    border: 1px solid lightblue;
+    width: 215px;
+}
+
+.gender {
+    display: flex;
+    align-items: center;
+    width: 200px;
+}
+
+
+.gender input {
+    height: 15px;
+}
+
+.terms {
+    display: flex;
+}
+
+.terms input {
+    width: 50px;
+    margin: 0px;
+    height: 18px;
+}
+select {
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid lightblue;
+    width: 221px;
+}
+.submit-btn {
+    margin: 10px 0px;
+}
+
+.errorMsg {
+    color: brown;
+    margin: 0px;
+}

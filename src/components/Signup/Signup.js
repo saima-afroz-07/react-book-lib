@@ -16,7 +16,7 @@ function Signup() {
     const schema = yup.object().shape({
         FullName: yup.string().max(20).required(),
         Email: yup.string().max(20).required(),
-        Phone: yup.string().max(14).required(),
+        Phone: yup.number().required().positive().integer(),
         Gender: yup.string().required(),
         Country: yup.string().required(),
         Password: yup.string().max(15).required(),
@@ -39,9 +39,17 @@ function Signup() {
         // } 
 
         try {
+            debugger;
             setError('');
             setLoading(true);
             await signup(data.Email, data.Password);
+            localStorage.setItem('user-details', JSON.stringify({FullName: data.FullName,
+                Email: data.Email,
+                Phone: data.Phone,
+                Gender: data.Gender,
+                Country: data.Country,
+                Password: data.Password,
+                Terms: data.Terms}))
             history.push("/dashboard");
             console.log(currentUser);
         } catch {
