@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import style from './style.module.css';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
+
+import style from './style.module.css';
 import { useAuth } from '../Contexts/AuthContext';
 
 function Login(props) {
@@ -14,7 +15,7 @@ function Login(props) {
 
 
     const schema = yup.object().shape({
-        email: yup.string().max(20).required(),
+        email: yup.string().email().max(20).required(),
         password: yup.string().max(15).required(),
     })
 
@@ -31,7 +32,7 @@ function Login(props) {
             console.log(currentUser);
         } catch {
             setError('Failed to create an account');
-            console.log(data.email, data.password, currentUser)
+            console.log(data.email, data.password, currentUser);
         }
         setLoading(false);
     }
@@ -44,7 +45,7 @@ function Login(props) {
             <form className={style.form} onSubmit={handleSubmit(onSubmit)}>
 
                 <div>
-                    <input type="text" placeholder="Email" {...register('email', {pattern: {value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, message: 'invalid email'},  required: true})} name="email"/>
+                    <input type="text" placeholder="Email" {...register('email')} name="email"/>
                     <p className={style.errorMsg}>{errors.email?.message}</p>
                 </div>
 

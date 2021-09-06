@@ -1,8 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+
 import { useAuth } from '../Contexts/AuthContext';
 import style from './style.module.css';
+import { databaseRef } from '../../Config/Config';
+
 
 
 function Dashboard(props) {
@@ -10,8 +13,9 @@ function Dashboard(props) {
     const [error, setError] = useState('');
     const [data, setData] = useState([])
     const history = useHistory();
-    const {logout} = useAuth();
+    const {currentUser, logout} = useAuth();
     const details = JSON.parse(localStorage.getItem('user-details'));
+    
     
 
     useEffect(() => {
@@ -21,6 +25,8 @@ function Dashboard(props) {
         }).catch(err => {
             console.log('error => '+ err);
         })
+
+        
     }, [])
 
     async function handleLogout () {
@@ -45,8 +51,8 @@ function Dashboard(props) {
             <div className={style.dashboard}>
                 <div>
                 <h1>Dashboard</h1>
-                <Link to={`/user-details/${details}`}><button>Profile</button></Link>
-                <Link to={`/book-list/`}><button>Books added to my library</button></Link>
+                <Link to='/user-details'><button>Profile</button></Link>
+                <Link to={`/book-list`}><button>Books added to my library</button></Link>
                 </div>
                 <table>
                     <thead>
@@ -62,7 +68,9 @@ function Dashboard(props) {
                           return <tr key={item.id}>
                             <td>{index + 1}</td>
                             <td>{item.volumeInfo.title}</td>
-                            <td>{item.volumeInfo.authors[0]}</td>  
+                            <td>{item.volumeInfo.authors.map((author, index) => {
+                                return <p key={index}>{author}</p>
+                            })}</td>  
                             <td><button onClick={() => addBook(item)}>Add</button></td>
                           </tr>  
                         })}

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import style from './style.module.css'
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
+
 import { useAuth } from '../Contexts/AuthContext';
+import style from './style.module.css'
+import { databaseRef } from '../../Config/Config';
+
 
 
 function Signup() {
@@ -15,7 +18,7 @@ function Signup() {
 
     const schema = yup.object().shape({
         FullName: yup.string().max(20).required(),
-        Email: yup.string().max(20).required(),
+        Email: yup.string().email().max(20).required(),
         Phone: yup.number().required().positive().integer(),
         Gender: yup.string().required(),
         Country: yup.string().required(),
@@ -39,22 +42,29 @@ function Signup() {
         // } 
 
         try {
-            debugger;
+            // debugger;
             setError('');
             setLoading(true);
-            await signup(data.Email, data.Password);
-            localStorage.setItem('user-details', JSON.stringify({FullName: data.FullName,
+            const data_firestore = await signup(data.Email, data.Password)
+
+            const details = {FullName: data.FullName,
                 Email: data.Email,
                 Phone: data.Phone,
                 Gender: data.Gender,
                 Country: data.Country,
                 Password: data.Password,
-                Terms: data.Terms}))
+                Terms: data.Terms};
+            databaseRef.collection('users').doc(data_firestore?.uid).set(details).then(() => {
+                console.log('Succesfully Data Added');
+            }).catch((err) =>{
+                console.log('Error in adding data ', err);
+            })
+            console.log(data_firestore);
             history.push("/dashboard");
-            console.log(currentUser);
-        } catch {
+            
+        } catch(err) {
             setError('Failed to create an account');
-            console.log(data.Email, data.Password, currentUser)
+            console.log(data.Email, data.Password, err)
         }
         setLoading(false);
     }
