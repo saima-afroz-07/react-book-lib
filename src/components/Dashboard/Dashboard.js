@@ -15,18 +15,31 @@ function Dashboard(props) {
     const history = useHistory();
     const {currentUser, logout} = useAuth();
     const [list, setList] = useState([]);
-    console.log(list)
+    const [libBooks, setLibBooks] = useState([]);
+    console.log(list);
+
+    const getAllLibBooks = async () => {
+        const documents = await databaseRef.collection('users').doc(currentUser?.uid).collection('books').get();
+            return documents.docs.map(doc => doc.data())
+    }
     
 
     useEffect(() => {
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=%22/*%22+orderBy=newest&maxResults=40&startIndex=1`).then(response => {
-            console.log(response.data.items);
+            // console.log(response.data.items);
             setData(response.data.items);
         }).catch(err => {
             console.log('error => '+ err);
         })
-        
-    }, [])
+
+        getAllLibBooks().then(res => {
+            console.log(res);
+            setLibBooks(res);
+            
+        }).catch((err) => {
+            console.log(err)
+        });
+    }, [currentUser, list])
 
     async function handleLogout () {
         setError('')
@@ -40,6 +53,8 @@ function Dashboard(props) {
             history.push('/login');
         }
     }
+
+    
     
 
     return (
@@ -63,7 +78,7 @@ function Dashboard(props) {
                     </thead>
                     <tbody>
                     {data.map((item, index) => {
-                        return <BookListItem item={item} index={index} key={index} list={list} setList={setList}/>
+                        return <BookListItem item={item} index={index} key={index} list={list} setList={setList} libBooks={libBooks} />
                     })}
                         
                     </tbody>

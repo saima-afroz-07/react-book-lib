@@ -3,23 +3,24 @@ import React, { useEffect, useState } from 'react';
 import { databaseRef } from '../../Config/Config';
 import { useAuth } from '../Contexts/AuthContext';
 
-function BookListItem({item, index, list, setList}) {
+function BookListItem({item, index, list, setList, libBooks}) {
     const [bookStatus, setBookStatus] = useState(false);
     const [buttonText, setButtonText] = useState('Add');
     const {currentUser} = useAuth();
+    // console.log(libBooks)
 
     const addRemoveBook = (ele) => {
         if(ele.id === item.id){
             if(bookStatus){
                 const updateList = list.filter(each_item => each_item.id !== ele.id);
                 setList(updateList);
-                console.log(updateList);
+                // console.log(updateList);
                 databaseRef.collection('users').doc(currentUser?.uid).collection('books').doc(ele.id).delete().then(() => {
-                    console.log('Succesfully deleted', ele.id);
+                    // console.log('Succesfully deleted', ele.id);
                 }).catch((err) =>{
                     console.log('Error in adding data ', err);
                 });
-                console.log(list)
+                // console.log(list)
                 setBookStatus(false)
                 setButtonText('Add');
 
@@ -28,7 +29,7 @@ function BookListItem({item, index, list, setList}) {
                 setList(list);
                 console.log(list);
                 databaseRef.collection('users').doc(currentUser?.uid).collection('books').doc(ele.id).set({item}).then(() => {
-                    console.log('Succesfully book Added');
+                    // console.log('Succesfully book Added');
                 }).catch((err) =>{
                     console.log('Error in adding data ', err);
                 });
@@ -38,15 +39,21 @@ function BookListItem({item, index, list, setList}) {
         }
         
     }
-
-    const getData = () => {
+    const changeBtnText =  () => {
+        console.log(libBooks)
+        libBooks.map(itm => {
+            if(itm.item.id === item.id){
+                setBookStatus(true)
+                setButtonText('Remove')
+                console.log(item.id)
+            }
+        }) 
         
     }
 
     useEffect(() => {
-        getData()
-
-    }, [])
+        changeBtnText()
+    }, [currentUser, libBooks])
     
     return (
          <tr key={item.id}>
