@@ -10,8 +10,20 @@ function Profile(props) {
     const {currentUser} = useAuth(); 
     const getData = async () => {
         const data = await databaseRef.collection('users').doc(currentUser?.uid).get();
-        setDetails(data.data())
-        console.log(data.data())
+        setDetails(data.data());
+        // if(details){
+        //     Object.keys(details).map(ele => {
+        //         if(ele === 'Password'){
+        //             details['Password'] = "************"
+        //         }
+        //         return ele
+        //     })
+        //     console.log(details) 
+        // }
+        console.log(data.data());
+        let userInfo = data.data() || {};
+        userInfo.Password = "***********"
+        setDetails(userInfo)
     }
     useEffect(() => {
         getData();

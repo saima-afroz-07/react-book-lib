@@ -59,6 +59,8 @@ function Signup() {
             }).catch((err) =>{
                 console.log('Error in adding data ', err);
             })
+            
+
             console.log(data_firestore);
             history.push("/dashboard");
             

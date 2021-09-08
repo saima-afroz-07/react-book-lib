@@ -5,17 +5,17 @@ import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../Contexts/AuthContext';
 import style from './style.module.css';
 import { databaseRef } from '../../Config/Config';
+import BookListItem from '../BookListItem/BookListItem';
 
 
 
 function Dashboard(props) {
-    const [list, setList] = useState([]);
     const [error, setError] = useState('');
     const [data, setData] = useState([])
     const history = useHistory();
     const {currentUser, logout} = useAuth();
-    const details = JSON.parse(localStorage.getItem('user-details'));
-    
+    const [list, setList] = useState([]);
+    console.log(list)
     
 
     useEffect(() => {
@@ -25,7 +25,6 @@ function Dashboard(props) {
         }).catch(err => {
             console.log('error => '+ err);
         })
-
         
     }, [])
 
@@ -38,43 +37,34 @@ function Dashboard(props) {
 
         } catch {
             setError('Failed to logout');
-            history.push('/login')
+            history.push('/login');
         }
     }
-    const addBook = (item) => {
-        console.log(item)
-    }
+    
 
     return (
         <>
             <button className={style["logout-btn"]} to="/login" onClick={handleLogout}>Logout</button>
             <div className={style.dashboard}>
                 <div>
-                <h1>Dashboard</h1>
-                <Link to='/user-details'><button>Profile</button></Link>
-                <Link to={`/book-list`}><button>Books added to my library</button></Link>
+                    <h1>Dashboard</h1>
+                    <Link to='/user-details'><button>Profile</button></Link>
+                    <Link to={`/book-list`}><button>Books added to my library</button></Link>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Books</th>
+                            <th>Title</th>
+                            <th>Preview</th>
                             <th>Authors</th>
                             <th>Add Book</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item, index) => {
-                          return <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>{item.volumeInfo.title}</td>
-                            <td>{item.volumeInfo.authors.map((author, index) => {
-                                return <p key={index}>{author}</p>
-                            })}</td>  
-                            <td><button onClick={() => addBook(item)}>Add</button></td>
-                          </tr>  
-                        })}
-                        
+                    {data.map((item, index) => {
+                        return <BookListItem item={item} index={index} key={index} list={list} setList={setList}/>
+                    })}
                         
                     </tbody>
                 </table>
